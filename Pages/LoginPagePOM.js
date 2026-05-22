@@ -1,42 +1,36 @@
+const fs = require('fs');
+const { expect } = require('@playwright/test');
+const config = require('../Test_Data/config');
+
 class LoginPage {
 
-    constructor(page) {
+    onstructor(page) {
 
-        // page object
         this.page = page;
+        this.usernameTextbox = page.locator('input[name="username"]');
 
-        // Locators
-        this.usernameInput = page.getByLabel('Username');
+         this.passwordTextbox = page.locator('input[name="password"]');
 
-        this.passwordInput = page.getByPlaceholder('Password');
-
-        this.loginButton = page.getByRole('button', { name: 'Login' });
-
-        this.errorMessage = page.locator('.error-msg');
+        this.loginButton = page.locator('button[type="submit"]');
     }
 
-    // Methods / Actions
-
-    async enterUsername(username) {
-        await this.usernameInput.fill(username);
+    async enterUsername() {
+        await expect(this.usernameTextbox).toBeVisible();
+        console.log("element loaded");
+        await this.usernameTextbox.fill(config.username);
     }
 
-    async enterPassword(password) {
-        await this.passwordInput.fill(password);
+    async enterPassword() {
+
+        await this.passwordTextbox.fill(config.password);
     }
 
     async clickLogin() {
-        await this.loginButton.click();
+
+       await this.loginButton.click();
     }
 
-    async login(username, password) {
-
-        await this.enterUsername(username);
-
-        await this.enterPassword(password);
-
-        await this.clickLogin();
-    }
+   
 }
 
 module.exports = LoginPage;
